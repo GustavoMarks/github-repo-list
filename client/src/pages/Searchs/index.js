@@ -4,6 +4,7 @@ import { Redirect, Link } from 'react-router-dom';
 import Loading from '../../components/Loading';
 import RepoList from '../../components/RepoList';
 import Logo from '../../assets/GitHub-Mark.png';
+import Footer from '../../components/Footer';
 
 import api from '../../services';
 
@@ -53,6 +54,7 @@ export default function Searchs({ match }) {
         <section className='container'>
           <h1> Não foi encontrado um usuário de nome {match.params.username}... </h1>
         </section>
+        <Footer />
       </main>
     )
   return (
@@ -84,6 +86,7 @@ export default function Searchs({ match }) {
         }
 
       </section>
+      <Footer />
     </main>
   )
 }

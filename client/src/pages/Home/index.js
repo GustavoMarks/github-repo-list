@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import Background from '../../assets/simple-codelines.svg';
 import Logo from '../../assets/GitHub-Mark-Light.png';
+import Footer from '../../components/Footer';
 
 import './style.css';
 
@@ -33,6 +34,7 @@ export default function Home() {
           pattern="^[a-zA-Z0-9]+$" />
 
       </form>
+      <Footer />
     </main>
   )
 }
