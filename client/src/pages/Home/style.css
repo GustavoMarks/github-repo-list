@@ -1,0 +1,33 @@
+#home{
+  background-color: rgb(43, 49, 55);
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  min-height: 100vh;
+}
+
+#home header{
+  text-align: center;
+}
+
+#home input{
+  border: none;
+  background-color: #585858;
+  color: whitesmoke;
+  border-radius: 4px;
+  text-align: center;
+  padding: 4px;
+  height: 30px;
+  min-width: 180px;
+  transition: all 0.2s;
+}
+
+#home input:focus{
+  background-color: white;
+  color: rgb(43, 49, 55);
+  text-align: left;
+  min-width: 300px;
+}

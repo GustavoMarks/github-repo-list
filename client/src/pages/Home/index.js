@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import Background from '../../assets/simple-codelines.svg';
+import Logo from '../../assets/GitHub-Mark-Light.png';
+
+import './style.css';
+
 export default function Home() {
   const [username, setUsername] = useState('');
   const history = useHistory();
@@ -11,21 +16,22 @@ export default function Home() {
   }
 
   return (
-    <main>
+    <main id="home" style={{ backgroundImage: `url(${Background})`}}>
       <header className="App-header">
-        <h1> Liste repositórios de usuários o GitHub </h1>
+        <img src={Logo} alt='GitHub'/>
+        <h1> GitHub Repo List </h1>
+        <p> Liste repositórios de usuários do GitHub </p>
       </header>
 
       <form onSubmit={submitUsername}>
         <input
           type='text'
-          placeholder='username'
+          placeholder='Digite um username'
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           title="insira uma combinação de letras e números, caracteres especiais não são aceitos"
           pattern="^[a-zA-Z0-9]+$" />
 
-        <button> Pesquisar </button>
       </form>
     </main>
   )
