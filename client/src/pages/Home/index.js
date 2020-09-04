@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 export default function Home() {
   const [username, setUsername] = useState('');
+  const history = useHistory();
 
   function submitUsername(e){
     e.preventDefault();
-    console.log(username);
-
+    history.push(`/search/${username}`);
   }
 
   return (
