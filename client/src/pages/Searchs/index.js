@@ -22,7 +22,7 @@ export default function Searchs({ match }) {
         })
         .catch(error => {
           console.log(error.response);
-          if(error.response.data.error.message === 'Request failed with status code 403') setLimited(true);
+          if(error.response && error.response.data.error.message === 'Request failed with status code 403') setLimited(true);
           else setNotFound(true);
 
         });
