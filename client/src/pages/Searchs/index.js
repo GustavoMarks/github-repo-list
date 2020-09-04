@@ -3,8 +3,11 @@ import { Redirect, Link } from 'react-router-dom';
 
 import Loading from '../../components/Loading';
 import RepoList from '../../components/RepoList';
+import Logo from '../../assets/GitHub-Mark.png';
 
 import api from '../../services';
+
+import './style.css';
 
 export default function Searchs({ match }) {
 
@@ -22,7 +25,7 @@ export default function Searchs({ match }) {
         })
         .catch(error => {
           console.log(error.response);
-          if(error.response && error.response.data.error.message === 'Request failed with status code 403') setLimited(true);
+          if (error.response && error.response.data.error.message === 'Request failed with status code 403') setLimited(true);
           else setNotFound(true);
 
         });
@@ -41,15 +44,25 @@ export default function Searchs({ match }) {
     return <Loading />
 
   if (notFound)
-    return <main><h1> Não foi encontrado um usuário de nome {match.params.username}... </h1></main>
-
+    return (
+      <main id='searchs'>
+        <nav>
+          <img src={Logo} alt='GitHub' />
+          <h1> <Link to='/'>Início</Link> / Pesquisa  </h1>
+        </nav>
+        <section className='container'>
+          <h1> Não foi encontrado um usuário de nome {match.params.username}... </h1>
+        </section>
+      </main>
+    )
   return (
-    <main>
-      <header>
-        <h1> <Link to='/'>Início</Link>/Pesquisa  </h1>
-      </header>
+    <main id='searchs'>
+      <nav>
+        <img src={Logo} alt='GitHub' />
+        <h1> <Link to='/'>Início</Link> / Pesquisa  </h1>
+      </nav>
 
-      <section>
+      <section className='container'>
         {
           notFound ?
             <header><h1> Não foi encontrado um usuário de nome {match.params.username}... </h1></header> :
@@ -62,11 +75,11 @@ export default function Searchs({ match }) {
                 <header>
                   <h1> Exibindo repositórios de {match.params.username} </h1>
                   {
-                    repos.length > 0 ? <p> Total de {repos.length} resultados </p> :
+                    repos.length > 0 ? <p> Total de {repos.length} resultado{repos.length > 1 ? 's' : null} </p> :
                       <p> Este usuário ainda não tem repositórios públicos </p>
                   }
                 </header>
-                <RepoList data={repos}/>
+                <RepoList data={repos} />
               </>
         }
 
