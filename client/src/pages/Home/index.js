@@ -33,6 +33,8 @@ export default function Home() {
           title="insira uma combinação de letras e números, caracteres especiais não são aceitos"
           pattern="^[a-zA-Z0-9]+$" />
 
+        <button type='submit'> Procurar </button>
+
       </form>
       <Footer />
     </main>
