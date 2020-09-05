@@ -1,0 +1,10 @@
+#load-content{
+  background-color: rgb(43, 49, 55);
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  min-height: 100vh;
+}
