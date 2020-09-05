@@ -15,13 +15,63 @@ export default function Searchs({ match }) {
   const [load, setLoad] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [limited, setLimited] = useState(false);
+  const [filter, setFilter] = useState('');
+  const [query, setQuery] = useState('');
+  const [orderAlpha, setOrderAlpha] = useState(true);
+  const [orderCreate, setOrderCreate] = useState(false);
+  const [orderUpdate, setOrderUpdate] = useState(false);
   const [repos, setRepos] = useState([]);
+  const [rendedRepos, setRenderedRepos] = useState([]);
+
+  function setOrder(type) {
+    let newArray = [];
+    if (type === 'alpha') {
+      newArray = rendedRepos.sort((a, b) => +(a.name > b.name) || -(a.name < b.name));
+      setOrderAlpha(true);
+      setOrderCreate(false);
+      setOrderUpdate(false);
+
+    } else if (type === 'create') {
+      newArray = rendedRepos.sort((a, b) => +(a.created_at > b.created_at) || -(a.created_at < b.created_at));
+      setOrderAlpha(false);
+      setOrderCreate(true);
+      setOrderUpdate(false);
+
+    } else {
+      newArray = rendedRepos.sort((a, b) => +(a.updated_at > b.updated_at) || -(a.updated_at < b.updated_at));
+      setOrderAlpha(false);
+      setOrderCreate(false);
+      setOrderUpdate(true);
+
+    }
+
+    setRenderedRepos(newArray);
+  }
+
+  function handleFilter(e) {
+    e.preventDefault();
+    const newArray = repos.filter(function (repo) {
+      return repo.name.toLowerCase().indexOf(filter.toLowerCase()) > -1;
+    });
+
+    setRenderedRepos(newArray);
+    setQuery(filter);
+  }
+
+  function clearQuery() {
+    setRenderedRepos(repos);
+    setOrderAlpha(true);
+    setOrderCreate(false);
+    setOrderUpdate(false);
+    setQuery('');
+  }
 
   useEffect(() => {
     async function fetchRepos() {
       await api.get(`/github-repos/${match.params.username}`)
         .then(res => {
           setRepos(res.data);
+          setRenderedRepos(res.data);
 
         })
         .catch(error => {
@@ -31,14 +81,14 @@ export default function Searchs({ match }) {
 
         });
 
-      //setRepos(temp)
+      // setRepos(temp);
+      // setRenderedRepos(temp);
       setLoad(true);
     }
-
-    fetchRepos();
+    if (repos.length === 0) fetchRepos();
 
     // eslint-disable-next-line
-  }, []);
+  }, [orderAlpha, orderCreate, orderUpdate, query]);
 
   if (!match.params.username) return <Redirect to='/' />
   if (!load)
@@ -48,8 +98,11 @@ export default function Searchs({ match }) {
     return (
       <main id='searchs'>
         <nav>
+        <span>
           <img src={Logo} alt='GitHub' />
           <h1> <Link to='/'>Início</Link> / Pesquisa  </h1>
+        </span>
+        <span/>
         </nav>
         <section className='container'>
           <h1> Não foi encontrado um usuário de nome {match.params.username}... </h1>
@@ -60,11 +113,29 @@ export default function Searchs({ match }) {
   return (
     <main id='searchs'>
       <nav>
-        <img src={Logo} alt='GitHub' />
-        <h1> <Link to='/'>Início</Link> / Pesquisa  </h1>
+        <span>
+          <img src={Logo} alt='GitHub' />
+          <h1> <Link to='/'>Início</Link> / Pesquisa  </h1>
+        </span>
+
+        <form id="filters" onSubmit={handleFilter} >
+          <input
+            type='text'
+            placeholder='Encontre um repositório...'
+            minLength={1}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)} />
+          <button type='button' onClick={() => setOrder('alpha')} > {orderAlpha ? <>&darr;</> : <>&uarr;</>} a-Z </button>
+          <button type='button' onClick={() => setOrder('create')}> {orderCreate ? <>&darr;</> : <>&uarr;</>} data de criação </button>
+          <button type='button' onClick={() => setOrder('update')}> {orderUpdate ? <>&darr;</> : <>&uarr;</>} último update </button>
+        </form>
       </nav>
 
       <section className='container'>
+        {
+          query ? <div id='query-tag'> {query} <span onClick={() => clearQuery()} >x</span> </div> : null
+        }
+
         {
           notFound ?
             <header><h1> Não foi encontrado um usuário de nome {match.params.username}... </h1></header> :
@@ -77,11 +148,11 @@ export default function Searchs({ match }) {
                 <header>
                   <h1> Exibindo repositórios de {match.params.username} </h1>
                   {
-                    repos.length > 0 ? <p> Total de {repos.length} resultado{repos.length > 1 ? 's' : null} </p> :
-                      <p> Este usuário ainda não tem repositórios públicos </p>
+                    repos.length > 0 ? <p> Total de {rendedRepos.length} resultado{rendedRepos.length > 1 ? 's' : null} </p> :
+                      <p> Não foram encontrados repositórios... </p>
                   }
                 </header>
-                <RepoList data={repos} />
+                <RepoList data={rendedRepos} />
               </>
         }
 
@@ -100,5 +171,14 @@ export default function Searchs({ match }) {
 //     language: "JavaScript",
 //     created_at: "2020-03-14T01:31:42Z",
 //     updated_at: "2020-03-21T02:49:55Z",
+//   },
+//   {
+//     id: 172393693,
+//     name: "bAlgoritmo-Organiza-Frete",
+//     description: "Algoritmo para organização ótima de itens em caixa para frete.",
+//     html_url: "https://github.com/GustavoMarks/Algoritmo-Organiza-Frete",
+//     language: "JavaScript",
+//     created_at: "2020-03-11T01:31:42Z",
+//     updated_at: "2020-03-12T02:49:55Z",
 //   }
 // ]

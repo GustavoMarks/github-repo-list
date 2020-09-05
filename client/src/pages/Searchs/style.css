@@ -10,10 +10,17 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
   background-color: #fafbfc;
   border-bottom: 0.8px solid lightgray;
   padding: 20px
+}
+
+#searchs nav span{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 #searchs nav img{
@@ -24,6 +31,36 @@
 
 #searchs nav h1{
   font-size: 1rem
+}
+
+#searchs nav form input{
+  width: 300px;
+  height: 26px;
+  padding: 0 8px;
+  margin: 0 10px 4px 0;
+  border: 1px solid lightgray;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+#searchs nav form input:focus{
+  box-shadow: 0 0 0.2em #0366d6;
+}
+
+#searchs nav form button{
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid lightgray;
+  margin-left: 10px;
+  border-radius: 6px;
+  background-color: #fafbfc;
+  transition: all 0.2s;
+  color: gray;
+  cursor: pointer;
+}
+
+#searchs nav form button:hover{
+  background-color: #f0f0f0;
 }
 
 #searchs section h1{
@@ -37,4 +74,32 @@
 
 #searchs section header{
   border-bottom: 0.8px solid lightgray;
+}
+
+#query-tag{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 40px;
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid lightgray;
+  margin-left: 10px;
+  border-radius: 6px;
+  background-color: #fafbfc;
+  color: gray;
+}
+
+#query-tag span{
+  width: 25px;
+  text-align: center;
+  border-radius: 5px;
+  font-weight: bolder;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#query-tag span:hover{
+  background-color: #f0f0f0;  
 }
