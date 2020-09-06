@@ -27,10 +27,14 @@ module.exports = {
 
         if (link) {
           try {
-            const lastPage = link.split('>;')[1].split('page=')[1]
+            const links = link.split(',');
+            const lastLink = links.find(element => element.includes('rel="last"'));
+            const lastPage = lastLink.split('>;')[0].split('?page=')[1];
+
             res.header('X-Last-Page', parseInt(lastPage));
 
-          } catch {
+          } catch (error) {
+            console.log(error);
             console.log('[*] Falha ao tentar acessar total de páginas...');
           }
         }
