@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect, Link, withRouter } from 'react-router-dom';
 
 import Loading from '../../components/Loading';
-import RepoList from '../../components/RepoList';
 import Logo from '../../assets/GitHub-Mark.png';
+import RepoList from '../../components/RepoList';
+import Pagination from '../../components/Pagination';
 import Footer from '../../components/Footer';
 
 import api from '../../services';
+import queryString from 'query-string';
 
 import './style.css';
 
-export default function Searchs({ match }) {
+function Searchs({ match, location }) {
 
   const [load, setLoad] = useState(false);
   const [notFound, setNotFound] = useState(false);
@@ -22,6 +24,12 @@ export default function Searchs({ match }) {
   const [orderUpdate, setOrderUpdate] = useState(false);
   const [repos, setRepos] = useState([]);
   const [rendedRepos, setRenderedRepos] = useState([]);
+
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const queryPage = queryString.parse(location.search).page;
+  const username = match.params.username;
 
   function setOrder(type) {
     let newArray = [];
@@ -66,27 +74,38 @@ export default function Searchs({ match }) {
     setQuery('');
   }
 
+  async function fetchRepos(nextPage) {
+
+    window.scrollTo(0, 0);
+
+    let url = `/github-repos/${username}`;
+    if (nextPage) url += `?page=${nextPage}`;
+
+    await api.get(url)
+      .then(res => {
+        setRepos(res.data);
+        setRenderedRepos(res.data);
+
+        setTotalPages(res.headers['x-last-page'] || 1);
+        setPage(nextPage || 1);
+
+      })
+      .catch(error => {
+        console.log(error.response);
+        if (error.response && error.response.data.error.message === 'Request failed with status code 403') setLimited(true);
+        else setNotFound(true);
+
+      });
+
+    setLoad(true);
+  }
+
   useEffect(() => {
-    async function fetchRepos() {
-      await api.get(`/github-repos/${match.params.username}`)
-        .then(res => {
-          setRepos(res.data);
-          setRenderedRepos(res.data);
 
-        })
-        .catch(error => {
-          console.log(error.response);
-          if (error.response && error.response.data.error.message === 'Request failed with status code 403') setLimited(true);
-          else setNotFound(true);
-
-        });
-
-      setLoad(true);
-    }
-    if (repos.length === 0) fetchRepos();
+    if (repos.length === 0) fetchRepos(queryPage);
 
     // eslint-disable-next-line
-  }, [orderAlpha, orderCreate, orderUpdate, query]);
+  }, [orderAlpha, orderCreate, orderUpdate, query, page]);
 
   if (!match.params.username) return <Redirect to='/' />
   if (!load)
@@ -131,12 +150,12 @@ export default function Searchs({ match }) {
 
       <section className='container'>
         {
-          query ? 
-          <div id='query-tag'>
-            <span>Filtrando resultados para <strong>{query}</strong></span>
-            <span id='remove-tag' onClick={() => clearQuery()} > remover filtro <strong> x </strong></span>
-          </div>
-          : null
+          query ?
+            <div id='query-tag'>
+              <span>Filtrando resultados para <strong>{query}</strong></span>
+              <span id='remove-tag' onClick={() => clearQuery()} > remover filtro <strong> x </strong></span>
+            </div>
+            : null
         }
 
         {
@@ -151,7 +170,8 @@ export default function Searchs({ match }) {
                 <header>
                   <h1> Exibindo repositórios de {match.params.username} </h1>
                   {
-                    repos.length > 0 ? <p> Total de {rendedRepos.length} resultado{rendedRepos.length > 1 ? 's' : null} </p> :
+                    repos.length > 0 ? <p> Total de {rendedRepos.length} resultado{rendedRepos.length > 1 ? 's' : null}
+                      {totalPages > 1 ? ` - (página ${page} de ${totalPages})` : null} </p> :
                       <p> Não foram encontrados repositórios... </p>
                   }
                 </header>
@@ -159,8 +179,12 @@ export default function Searchs({ match }) {
               </>
         }
 
+        <Pagination totalPages={totalPages} actualPage={page} url={`/search/${match.params.username}`} onClick={fetchRepos} />
+
       </section>
       <Footer />
     </main>
   )
 }
+
+export default withRouter(Searchs);

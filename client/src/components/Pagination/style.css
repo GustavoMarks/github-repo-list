@@ -1,0 +1,22 @@
+#pagination-nav button {
+  border: none;
+  cursor: pointer;
+  font-weight: bolder;
+  height: 30px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.nav-button-default {
+  color: #0366d6;
+  background-color: #fafbfc;
+}
+
+.nav-button-default:hover {
+  background-color: #f0f0f0;
+}
+
+.nav-button-selected {
+  background-color: #0366d6;
+  color: white;
+}
