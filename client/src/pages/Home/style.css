@@ -38,6 +38,7 @@
   color: rgb(43, 49, 55);
   text-align: left;
   min-width: 300px;
+  outline: none;
 }
 
 #home button{
@@ -54,4 +55,8 @@
 
 #home button:hover {
   background-color: #2e8b57;
+}
+
+#home button:focus {
+  outline: none;
 }

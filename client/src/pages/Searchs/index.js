@@ -81,8 +81,6 @@ export default function Searchs({ match }) {
 
         });
 
-      // setRepos(temp);
-      // setRenderedRepos(temp);
       setLoad(true);
     }
     if (repos.length === 0) fetchRepos();
@@ -98,11 +96,11 @@ export default function Searchs({ match }) {
     return (
       <main id='searchs'>
         <nav>
-        <span>
-          <img src={Logo} alt='GitHub' />
-          <h1> <Link to='/'>Início</Link> / Pesquisa  </h1>
-        </span>
-        <span/>
+          <span>
+            <img src={Logo} alt='GitHub' />
+            <h1> <Link to='/'>Início</Link> / Pesquisa  </h1>
+          </span>
+          <span />
         </nav>
         <section className='container'>
           <h1> Não foi encontrado um usuário de nome {match.params.username}... </h1>
@@ -133,7 +131,12 @@ export default function Searchs({ match }) {
 
       <section className='container'>
         {
-          query ? <div id='query-tag'> {query} <span onClick={() => clearQuery()} >x</span> </div> : null
+          query ? 
+          <div id='query-tag'>
+            <span>Filtrando resultados para <strong>{query}</strong></span>
+            <span id='remove-tag' onClick={() => clearQuery()} > remover filtro <strong> x </strong></span>
+          </div>
+          : null
         }
 
         {
@@ -161,24 +164,3 @@ export default function Searchs({ match }) {
     </main>
   )
 }
-
-// const temp = [
-//   {
-//     id: 172393692,
-//     name: "Algoritmo-Organiza-Frete",
-//     description: "Algoritmo para organização ótima de itens em caixa para frete.",
-//     html_url: "https://github.com/GustavoMarks/Algoritmo-Organiza-Frete",
-//     language: "JavaScript",
-//     created_at: "2020-03-14T01:31:42Z",
-//     updated_at: "2020-03-21T02:49:55Z",
-//   },
-//   {
-//     id: 172393693,
-//     name: "bAlgoritmo-Organiza-Frete",
-//     description: "Algoritmo para organização ótima de itens em caixa para frete.",
-//     html_url: "https://github.com/GustavoMarks/Algoritmo-Organiza-Frete",
-//     language: "JavaScript",
-//     created_at: "2020-03-11T01:31:42Z",
-//     updated_at: "2020-03-12T02:49:55Z",
-//   }
-// ]
