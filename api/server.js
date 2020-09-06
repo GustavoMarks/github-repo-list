@@ -1,6 +1,7 @@
 'use strict';
 
 const app = require('./src/app');
+require('./envConfig');
 
 const port = normalizaPort(process.env.PORT || '3333');
 function normalizaPort(val) {
