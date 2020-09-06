@@ -1,6 +1,8 @@
 'use strict';
 const axios = require('axios');
-const { response } = require('express');
+require('../../envConfig');
+
+const token = process.env.GITHUB_TOKEN == 'false' ? false : process.env.GITHUB_TOKEN;
 
 module.exports = {
   async index(req, res) {
@@ -11,14 +13,24 @@ module.exports = {
 
     axios({
       method: 'GET',
-      url: `https://api.github.com/users/${username}/repos`
+      url: `https://api.github.com/users/${username}/repos`,
+      headers: {
+        'Authorization': token ? `token ${token}` : null
+      }
     })
       .then(response => {
+        const limit = response.headers['x-ratelimit-limit'];
+        const used = response.headers['x-ratelimit-used'];
+        
+        console.log(`[*] Requisição realizada com sucesso (${used}/${limit})`)
         return res.send(response.data);
 
       })
       .catch(error => {
-        if(error.response.status == 404) return res.status(404).send({
+        const { status } = error.response;
+        console.log(`[*] Requisição falhou (${status})`);
+
+        if(status == 404) return res.status(404).send({
           error,
           msg: 'Este usuername não possui cadastro...'
         });
