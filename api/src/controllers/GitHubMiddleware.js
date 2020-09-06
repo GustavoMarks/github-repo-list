@@ -15,7 +15,7 @@ module.exports = {
     axios({
       method: 'GET',
       url: `https://api.github.com/users/${username}/repos`,
-      params: page ? { page }: null,
+      params: page ? { page } : null,
       headers: {
         'Authorization': token ? `token ${token}` : null
       }
@@ -29,12 +29,19 @@ module.exports = {
           try {
             const links = link.split(',');
             const lastLink = links.find(element => element.includes('rel="last"'));
-            const lastPage = lastLink.split('>;')[0].split('?page=')[1];
+            if (lastLink) {
+              const lastPage = lastLink.split('>;')[0].split('?page=')[1];
+              res.header('X-Last-Page', parseInt(lastPage));
 
-            res.header('X-Last-Page', parseInt(lastPage));
+            } else {
+              // Caso a requisição seja feita na última pagina, não há link de referência
+              const prevLink = links.find(element => element.includes('rel="prev"'));
+              const lastPage = prevLink.split('>;')[0].split('?page=')[1];
+              res.header('X-Last-Page', parseInt(lastPage) + 1);
 
-          } catch (error) {
-            console.log(error);
+            }
+
+          } catch {
             console.log('[*] Falha ao tentar acessar total de páginas...');
           }
         }
