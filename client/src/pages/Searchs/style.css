@@ -45,6 +45,7 @@
 
 #searchs nav form input:focus{
   box-shadow: 0 0 0.2em #0366d6;
+  outline: none;
 }
 
 #searchs nav form button{
@@ -62,6 +63,11 @@
 #searchs nav form button:hover{
   background-color: #f0f0f0;
 }
+
+#searchs nav form button:focus{
+  outline: none;
+}
+
 
 #searchs section h1{
   font-size: 1.2rem
@@ -84,22 +90,19 @@
   min-width: 40px;
   height: 26px;
   padding: 0 8px;
-  border: 1px solid lightgray;
+  border: none;
   margin-left: 10px;
   border-radius: 6px;
-  background-color: #fafbfc;
   color: gray;
+  font-size: 0.8rem;
 }
 
-#query-tag span{
-  width: 25px;
-  text-align: center;
+#query-tag span#remove-tag{
   border-radius: 5px;
-  font-weight: bolder;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-#query-tag span:hover{
-  background-color: #f0f0f0;  
+#query-tag span#remove-tag:hover{
+  color: #0366d6;  
 }
