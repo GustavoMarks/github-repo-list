@@ -12,7 +12,7 @@ export default function RepoList({ data }) {
 
   return (
     <ul id="repo-list">
-      {
+      { data.length > 0 ?
         data.map(repo => {
           return (
             <li key={repo.id}>
@@ -25,7 +25,7 @@ export default function RepoList({ data }) {
               </div>
             </li>
           )
-        })
+        }) : null
       }
     </ul>
   )
