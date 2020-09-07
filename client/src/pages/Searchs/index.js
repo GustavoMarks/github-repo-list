@@ -114,7 +114,7 @@ function Searchs({ match, location }) {
   if (notFound)
     return (
       <main id='searchs'>
-        <nav>
+        <nav id='navbar'>
           <span>
             <img src={Logo} alt='GitHub' />
             <h1> <Link to='/'>Início</Link> / Pesquisa  </h1>
@@ -129,7 +129,7 @@ function Searchs({ match, location }) {
     )
   return (
     <main id='searchs'>
-      <nav>
+      <nav id='navbar'>
         <span>
           <img src={Logo} alt='GitHub' />
           <h1> <Link to='/'>Início</Link> / Pesquisa  </h1>
