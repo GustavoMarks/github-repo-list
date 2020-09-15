@@ -1,5 +1,7 @@
 'use strict';
 const axios = require('axios');
+const paginationWithLink = require('./paginationWithLink');
+const pagination = require('./paginationWithLink');
 require('../../envConfig');
 
 const token = process.env.GITHUB_TOKEN == 'false' ? false : process.env.GITHUB_TOKEN;
@@ -26,30 +28,11 @@ module.exports = {
       const used = response.headers['x-ratelimit-used'];
       const link = response.headers['link'];
 
-      if (link) {
-        try {
-          const links = link.split(',');
-          const lastLink = links.find(element => element.includes('rel="last"'));
-          if (lastLink) {
-            const lastPage = lastLink.split('>;')[0].split('?page=')[1];
-            res.header('X-Last-Page', parseInt(lastPage));
-
-          } else {
-            // Caso a requisição seja feita na última pagina, não há link de referência
-            const prevLink = links.find(element => element.includes('rel="prev"'));
-            const lastPage = prevLink.split('>;')[0].split('?page=')[1];
-            res.header('X-Last-Page', parseInt(lastPage) + 1);
-
-          }
-
-        } catch {
-          console.log('[*] Falha ao tentar acessar total de páginas...');
-        }
-      }
+      const lastPage = paginationWithLink(link);
+      if(lastPage) res.header('X-Last-Page', lastPage);
 
       console.log(`[*] Requisição realizada com sucesso (${used}/${limit})`)
       return res.send(response.data);
-
 
     } catch (error) {
       const { status } = error.response;
