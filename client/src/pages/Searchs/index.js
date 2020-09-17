@@ -81,21 +81,21 @@ function Searchs({ match, location }) {
     let url = `/github-repos/${username}`;
     if (nextPage) url += `?page=${nextPage}`;
 
-    await api.get(url)
-      .then(res => {
-        setRepos(res.data);
-        setRenderedRepos(res.data);
+    try {
 
-        setTotalPages(res.headers['x-last-page'] || 1);
-        setPage(nextPage || 1);
+      const res = await api.get(url);
+      setRepos(res.data);
+      setRenderedRepos(res.data);
 
-      })
-      .catch(error => {
-        console.log(error.response);
-        if (error.response && error.response.data.error.message === 'Request failed with status code 403') setLimited(true);
-        else setNotFound(true);
+      setTotalPages(res.headers['x-last-page'] || 1);
+      setPage(nextPage || 1);
 
-      });
+    } catch (error) {
+      console.log(error.response);
+      if (error.response && error.response.data.error.message === 'Request failed with status code 403') setLimited(true);
+      else setNotFound(true);
+
+    }
 
     setLoad(true);
   }
